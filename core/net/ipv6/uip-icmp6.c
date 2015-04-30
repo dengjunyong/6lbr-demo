@@ -47,8 +47,8 @@
 #include "net/ipv6/uip-icmp6.h"
 #include "contiki-default-conf.h"
 
-//#define DEBUG 0
-#define DEBUG DEBUG_FLAG
+#define DEBUG 0
+//#define DEBUG DEBUG_FLAG
 #if DEBUG
 #include <stdio.h>
 #define PRINTF(...) printf(__VA_ARGS__)

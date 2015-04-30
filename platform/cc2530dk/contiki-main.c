@@ -29,6 +29,11 @@
 PROCESS_NAME(viztool_process);
 #endif
 /*---------------------------------------------------------------------------*/
+#define DEBUG 0
+//#define DEBUG DEBUG_FLAG
+#if DEBUG
+#include <stdio.h>
+#endif
 #if STARTUP_CONF_VERBOSE
 #define PUTSTRING(...) putstring(__VA_ARGS__)
 #define PUTHEX(...) puthex(__VA_ARGS__)
@@ -284,7 +289,9 @@ main(void) CC_NON_BANKED
        packetbuf_clear();
        len = NETSTACK_RADIO.read(packetbuf_dataptr(), PACKETBUF_SIZE);
        if(len > 0) {
-         PUTSTRING("NETSTACK_RADIO.read\n");
+#if DEBUG
+         printf("NETSTACK_RADIO.read:%d\n", len);
+#endif
          packetbuf_set_datalen(len);
          NETSTACK_RDC.input();
           

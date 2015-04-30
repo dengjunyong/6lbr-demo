@@ -53,7 +53,8 @@
 #endif
 #include <string.h>
 
-#define DEBUG DEBUG_FLAG
+#define DEBUG 0
+//#define DEBUG DEBUG_FLAG
 #include "net/ip/uip-debug.h"
 
 #if UIP_LOGGING

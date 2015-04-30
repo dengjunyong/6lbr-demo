@@ -213,7 +213,7 @@
 #define CC2530_RF_CONF_CHANNEL    19
 #endif /* CC2530_RF_CONF_CHANNEL */
  
-//#define CC2530_RF_CONF_AUTOACK 0
+#define CC2530_RF_CONF_AUTOACK 1
 
 #define NULLRDC_CONF_SEND_802154_ACK 0
 
@@ -233,7 +233,9 @@
 #ifndef UIP_CONF_TCP
 #define UIP_CONF_TCP                         1
 #endif
+#ifndef UIP_CONF_UDP
 #define UIP_CONF_UDP                         1
+#endif
 #define UIP_CONF_UDP_CHECKSUMS               1
 
 /* ND and Routing */
@@ -242,7 +244,8 @@
 #endif
 
 #define UIP_CONF_ND6_SEND_RA                 0
-#define UIP_CONF_IP_FORWARD                  0
+#define UIP_CONF_IP_FORWARD                  0 //for ipv4 forward
+//#define UIP_CONF_IP_FORWARD                  1
 #define RPL_CONF_STATS                       0
 #define RPL_CONF_MAX_DAG_ENTRIES             1
 #ifndef RPL_CONF_OF
@@ -297,7 +300,9 @@
 #define UIP_CONF_BUFFER_SIZE               512
 #define RIME_CONF_NO_POLITE_ANNOUCEMENTS     0
 #define QUEUEBUF_CONF_NUM                    6
+#ifndef UIP_CONF_UDP
 #define UIP_CONF_UDP                         1
+#endif
 #define UIP_CONF_UDP_CHECKSUMS               1
 #define UIP_CONF_BROADCAST                   1
 #endif /* UIP_CONF_IPV6 */

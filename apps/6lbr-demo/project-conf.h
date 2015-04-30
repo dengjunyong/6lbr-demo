@@ -39,18 +39,22 @@
 
 #define UIP_CONF_IPV6 1
 #define UIP_CONF_IPV6_RPL 1
+#define UIP_CONF_UDP 1
 //#define WITH_COAP 13
 #define REST coap_rest_implementation
 #define UIP_CONF_TCP 0
 #define UIP_CONF_ICMP6 0
-#define SICSLOWPAN_CONF_FRAG 0
+#define SICSLOWPAN_CONF_FRAG 1
 #define UIP_CONF_IPV6_CHECKS 1
 //#define NULLRDC_CONF_ACK_WAIT_TIME (RTIMER_SECOND / 100)
+#define KEEP_RADIO_ON 1
+//#define RFX2401C_ON 1
 
 #define DEBUG_FLAG 1 /* debug flag */
-#define STARTUP_CONF_VERBOSE DEBUG_FLAG
+#define STARTUP_CONF_VERBOSE 0
 #undef CC2530_RF_CONF_CHANNEL
 #define CC2530_RF_CONF_CHANNEL 26
+#define NETSTACK_CONF_RDC     contikimac_driver
 
 #define IEEE802154_CONF_PANID 0xABCD
 /*---------------------------------------------------------------------------*/

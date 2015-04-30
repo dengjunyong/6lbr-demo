@@ -72,10 +72,11 @@
 #define RF_TX_LED_OFF()
 #endif
 /*---------------------------------------------------------------------------*/
-//#define DEBUG 0
-#define DEBUG DEBUG_FLAG
+#define DEBUG 0
+//#define DEBUG DEBUG_FLAG
 #if DEBUG
 #include "debug.h"
+#include "stdio.h"
 #define PUTSTRING(...) putstring(__VA_ARGS__)
 #define PUTHEX(...) puthex(__VA_ARGS__)
 #else
@@ -182,6 +183,8 @@ init(void)
 #endif /* CC2530_RF_LOW_POWER_RX */
 
   CCACTRL0 = CC2530_RF_CCA_THRES;
+  //CCACTRL1 = 0x02;
+  CCACTRL1 = 0x1a;
 
   /*
    * According to the user guide, these registers must be updated from their
@@ -400,12 +403,33 @@ read(void *buf, unsigned short bufsize)
   len -= CHECKSUM_LEN;
   for(i = 0; i < len; ++i) {
     ((unsigned char *)(buf))[i] = RFD;
-#if CC2530_RF_CONF_HEXDUMP
-    io_arch_writeb(((unsigned char *)(buf))[i]);
-#endif
+//#if CC2530_RF_CONF_HEXDUMP
     PUTHEX(((unsigned char *)(buf))[i]);
+//#endif
   }
   //PUTSTRING("\n");
+#if DEBUG
+        {
+  PUTSTRING("\n");
+          uint8_t *data = buf;
+          int i;
+      #if WIRESHARK_IMPORT_FORMAT
+          printf("0000");
+          for(i = 0; i < len; i++)
+            printf(" %02x", data[i]);
+      #else
+          printf("         ");
+          for(i = 0; i < len; i++) {
+            printf("%02x", data[i]);
+            if((i & 3) == 3)
+              printf(" ");
+            if((i & 15) == 15)
+              printf("\n         ");
+          }
+      #endif
+          printf("\n");
+        }
+#endif
 
   /* Read the RSSI and CRC/Corr bytes */
   tmp = ((int8_t) RFD);
@@ -453,6 +477,7 @@ read(void *buf, unsigned short bufsize)
 static int
 channel_clear(void)
 {
+//  printf("RSSI:%d, CCACTRL0:%d, CCACTRL1:%d\n", RSSI, CCACTRL0, CCACTRL1);
   if(FSMSTAT1 & FSMSTAT1_CCA) {
     return CC2530_RF_CCA_CLEAR;
   }

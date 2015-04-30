@@ -83,7 +83,8 @@
 
 #if UIP_CONF_IPV6
 /*------------------------------------------------------------------*/
-#define DEBUG 0
+//#define DEBUG 0
+#define DEBUG DEBUG_FLAG
 #include "net/ip/uip-debug.h"
 
 #if UIP_LOGGING
