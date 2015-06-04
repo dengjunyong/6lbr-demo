@@ -292,7 +292,8 @@ schedule_dao(rpl_instance_t *instance, clock_time_t latency)
     PRINTF("RPL: DAO timer already scheduled\n");
   } else {
     if(latency != 0) {
-      expiration_time = latency / 2 +
+      //expiration_time = latency / 2 +
+      expiration_time = 2 + // between 2 to 2+latecy
         (random_rand() % (latency));
     } else {
       expiration_time = 0;

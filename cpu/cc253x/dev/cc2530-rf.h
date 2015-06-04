@@ -45,8 +45,9 @@
 /*---------------------------------------------------------------------------
  * RF Config
  *---------------------------------------------------------------------------*/
-//#define CC2530_RF_TX_POWER_RECOMMENDED 0xD5
-#define CC2530_RF_TX_POWER_RECOMMENDED 0xF5
+#define CC2530_RF_TX_POWER_RECOMMENDED 0xD5
+//#define CC2530_RF_TX_POWER_RECOMMENDED 0xF5
+//#define CC2530_RF_TX_POWER_RECOMMENDED 0x05
 #ifdef CC2530_RF_CONF_TX_POWER
 #define CC2530_RF_TX_POWER CC2530_RF_CONF_TX_POWER
 #else

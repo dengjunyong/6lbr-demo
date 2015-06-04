@@ -188,7 +188,7 @@
         </option>
         <option>
           <name>General Xdata Stack Size</name>
-          <state>0x400</state>
+          <state>0x300</state>
         </option>
         <option>
           <name>General Ext Stack Size</name>
@@ -2419,7 +2419,6 @@
           <state>VP_NASSERT</state>
           <state>jMODEL_CC2530_ISMART_IRMOTE</state>
           <state>MODEL_CC2530_DK</state>
-          <state>RFX2401C_ON</state>
           <state>UART1_CONF_ENABLE</state>
           <state>UART1_ALTERNATIVE_1</state>
           <state>UART1_CONF_WITH_INPUT=1</state>

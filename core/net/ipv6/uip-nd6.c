@@ -83,8 +83,8 @@
 
 #if UIP_CONF_IPV6
 /*------------------------------------------------------------------*/
-//#define DEBUG 0
-#define DEBUG DEBUG_FLAG
+#define DEBUG 0
+//#define DEBUG DEBUG_FLAG
 #include "net/ip/uip-debug.h"
 
 #if UIP_LOGGING
@@ -207,17 +207,29 @@ ns_input(void)
         if(nbr == NULL) {
           uip_ds6_nbr_add(&UIP_IP_BUF->srcipaddr,
 			  (uip_lladdr_t *)&nd6_opt_llao[UIP_ND6_OPT_DATA_OFFSET],
+#if NBR_STALE_AFTER_NS
 			  0, NBR_STALE);
+#else
+			  0, NBR_REACHABLE);
+#endif
         } else {
           uip_lladdr_t *lladdr = (uip_lladdr_t *)uip_ds6_nbr_get_ll(nbr);
           if(memcmp(&nd6_opt_llao[UIP_ND6_OPT_DATA_OFFSET],
 		    lladdr, UIP_LLADDR_LEN) != 0) {
             memcpy(lladdr, &nd6_opt_llao[UIP_ND6_OPT_DATA_OFFSET],
 		   UIP_LLADDR_LEN);
+#if NBR_STALE_AFTER_NS
             nbr->state = NBR_STALE;
+#else
+            nbr->state = NBR_REACHABLE;
+#endif
           } else {
             if(nbr->state == NBR_INCOMPLETE) {
+#if NBR_STALE_AFTER_NS
               nbr->state = NBR_STALE;
+#else
+              nbr->state = NBR_REACHABLE;
+#endif
             }
           }
         }
@@ -550,6 +562,7 @@ na_input(void)
         nbr->state = NBR_REACHABLE;
         nbr->nscount = 0;
 
+        uip_ds6_if.reachable_time = uip_ds6_compute_reachable_time();
         /* reachable time is stored in ms */
         stimer_set(&(nbr->reachable), uip_ds6_if.reachable_time / 1000);
 
@@ -572,6 +585,7 @@ na_input(void)
           }
           if(is_solicited) {
             nbr->state = NBR_REACHABLE;
+            uip_ds6_if.reachable_time = uip_ds6_compute_reachable_time();
             /* reachable time is stored in ms */
             stimer_set(&(nbr->reachable), uip_ds6_if.reachable_time / 1000);
           } else {

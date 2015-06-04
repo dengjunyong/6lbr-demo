@@ -1194,10 +1194,10 @@ uip_process(uint8_t flag)
   if(!uip_ds6_is_my_addr(&UIP_IP_BUF->destipaddr) &&
      !uip_ds6_is_my_maddr(&UIP_IP_BUF->destipaddr)) {
 #else
-	  //Crude but effective passthrough for ND Proxy
-	  if(!uip_ds6_is_my_addr(&UIP_IP_BUF->destipaddr) &&
-	     !uip_ds6_is_my_maddr(&UIP_IP_BUF->destipaddr) &&
-		 (*uip_next_hdr != UIP_PROTO_ICMP6 || (UIP_ICMP_BUF->type != ICMP6_NS && UIP_ICMP_BUF->type != ICMP6_NA))) {
+  //Crude but effective passthrough for ND Proxy
+  if(!uip_ds6_is_my_addr(&UIP_IP_BUF->destipaddr) &&
+     !uip_ds6_is_my_maddr(&UIP_IP_BUF->destipaddr) &&
+     (*uip_next_hdr != UIP_PROTO_ICMP6 || (UIP_ICMP_BUF->type != ICMP6_NS && UIP_ICMP_BUF->type != ICMP6_NA))) {
 #endif
     if(!uip_is_addr_mcast(&UIP_IP_BUF->destipaddr) &&
        !uip_is_addr_link_local(&UIP_IP_BUF->destipaddr) &&
@@ -1418,11 +1418,11 @@ uip_process(uint8_t flag)
 #if UIP_CONF_IPV6_CHECKS
   /* Compute and check the ICMP header checksum */
   if(uip_icmp6chksum() != 0xffff) {
-//    UIP_STAT(++uip_stat.icmp.drop);
-//    UIP_STAT(++uip_stat.icmp.chkerr);
-//    UIP_LOG("icmpv6: bad checksum.");
+    UIP_STAT(++uip_stat.icmp.drop);
+    UIP_STAT(++uip_stat.icmp.chkerr);
+    UIP_LOG("icmpv6: bad checksum.");
     PRINTF("icmpv6: bad checksum.\n");
-//    goto drop;
+    goto drop;
   }
   else
   {

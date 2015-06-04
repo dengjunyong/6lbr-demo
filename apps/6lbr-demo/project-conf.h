@@ -39,8 +39,9 @@
 
 #define UIP_CONF_IPV6 1
 #define UIP_CONF_IPV6_RPL 1
+#define RPL_CONF_LEAF_ONLY 1 //rpl叶子节点
 #define UIP_CONF_UDP 1
-//#define WITH_COAP 13
+#define WITH_COAP 13
 #define REST coap_rest_implementation
 #define UIP_CONF_TCP 0
 #define UIP_CONF_ICMP6 0
@@ -49,12 +50,18 @@
 //#define NULLRDC_CONF_ACK_WAIT_TIME (RTIMER_SECOND / 100)
 #define KEEP_RADIO_ON 1
 //#define RFX2401C_ON 1
+#define RPL_CONF_DAO_LATENCY 512 //dao回复时间范围,避免碰撞的机制
+#define NBR_STALE_AFTER_NS 0 //当受到NS,把节点状态设置为STALE,这会导致下行数据包引发两次NS-NA
+/*
+ * csma重发时间1/NETSTACK_CONF_RDC_CHANNEL_CHECK_RATE,
+ * rdc层contikimac也用到该值,在csma重发时间段内无限重发
+ */
+#define NETSTACK_CONF_RDC_CHANNEL_CHECK_RATE 8 
 
-#define DEBUG_FLAG 1 /* debug flag */
+#define DEBUG_FLAG 0 /* debug flag */
 #define STARTUP_CONF_VERBOSE 0
 #undef CC2530_RF_CONF_CHANNEL
 #define CC2530_RF_CONF_CHANNEL 26
-#define NETSTACK_CONF_RDC     contikimac_driver
 
 #define IEEE802154_CONF_PANID 0xABCD
 /*---------------------------------------------------------------------------*/
@@ -89,6 +96,39 @@
 #define UIP_CONF_RECEIVE_WINDOW  60
 
 /*---------------------------------------------------------------------------*/
+/* WEBSERVER                                                                 */
+/*---------------------------------------------------------------------------*/
+
+#undef WEBSERVER_CONF_CFS_CONNS
+#define WEBSERVER_CONF_CFS_CONNS 2
+
+/* Reserve space for a file name (default is to not use file name) */
+#undef WEBSERVER_CONF_CFS_PATHLEN
+#define WEBSERVER_CONF_CFS_PATHLEN 80
+
+/*---------------------------------------------------------------------------*/
+/* RADIO                                                                     */
+/*---------------------------------------------------------------------------*/
+
+#undef NETSTACK_CONF_MAC
+#define NETSTACK_CONF_MAC     		csma_driver
+
+#undef NETSTACK_CONF_RDC
+#define NETSTACK_CONF_RDC     		nullrdc_driver
+//#define NETSTACK_CONF_RDC     contikimac_driver
+
+#undef SKY_CONF_MAX_TX_POWER
+#define SKY_CONF_MAX_TX_POWER 	31
+
+#if CONTIKI_TARGET_ECONOTAG
+#undef NULLRDC_CONF_802154_AUTOACK
+#define NULLRDC_CONF_802154_AUTOACK_HW     1
+#else
+#undef NULLRDC_CONF_802154_AUTOACK
+#define NULLRDC_CONF_802154_AUTOACK	1
+#endif
+
+/*---------------------------------------------------------------------------*/
 /* RPL & Network                                                             */
 /*---------------------------------------------------------------------------*/
 
@@ -99,7 +139,6 @@
 #define RPL_MAX_INSTANCES		1
 
 /* Z1 platform has limited RAM */
-#if 0
 #if defined CONTIKI_TARGET_Z1
 
 #define RPL_CONF_MAX_PARENTS_PER_DAG    12
@@ -117,18 +156,21 @@
 
 #else
 
-#define RPL_CONF_MAX_PARENTS_PER_DAG    24
-#define NEIGHBOR_CONF_MAX_NEIGHBORS     24
+#define RPL_CONF_MAX_PARENTS_PER_DAG    24 //代码中没使用
+#define NEIGHBOR_CONF_MAX_NEIGHBORS     24 //代码中不再使用,代替它的是NBR_TABLE_CONF_MAX_NEIGHBORS
+
+#undef NBR_TABLE_CONF_MAX_NEIGHBORS
+#define NBR_TABLE_CONF_MAX_NEIGHBORS    4 /* 最大邻居个数 */
 
 #undef UIP_CONF_DS6_NBR_NBU
-#define UIP_CONF_DS6_NBR_NBU     24
+#define UIP_CONF_DS6_NBR_NBU     24 //代码中没有使用
 
 //Deprecated, for old DS6 Route API, use UIP_CONF_MAX_ROUTES instead
 #undef UIP_CONF_DS6_ROUTE_NBU
 #define UIP_CONF_DS6_ROUTE_NBU   24
 
 #undef UIP_CONF_MAX_ROUTES
-#define UIP_CONF_MAX_ROUTES   24
+#define UIP_CONF_MAX_ROUTES   1 //最大路由个数,叶子节点路由个数可以为0,但是数组大小不能为0
 
 #undef UIP_CONF_ND6_SEND_NA
 #define UIP_CONF_ND6_SEND_NA   1
@@ -138,7 +180,6 @@
 /*---------------------------------------------------------------------------*/
 /* Init                                                                      */
 /*---------------------------------------------------------------------------*/
-#endif
 #define UIP_DS6_CONF_NO_STATIC_ADDRESS 1
 
 #endif /* CETIC_6LBR_DEMO_PROJECT_CONF_H */
